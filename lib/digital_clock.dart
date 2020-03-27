@@ -130,7 +130,7 @@ class _DigitalClockState extends State<DigitalClock> {
       textColor = Colors.green;
     }
 
-    if(_dateTime.hour >= 20)
+    if(_dateTime.hour >= 20 || _dateTime.hour <= 7)
     {
       textColor = Colors.red;
     }
