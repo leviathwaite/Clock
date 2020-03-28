@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'model.dart';
 import 'package:screen/screen.dart';
 
+
 enum _Element {
   background,
   text,
@@ -41,6 +42,20 @@ class _DigitalClockState extends State<DigitalClock> {
   DateTime _dateTime = DateTime.now();
   Timer _timer;
 
+  // TODO pick colors in the app
+  static Color dayTextColor = Colors.green;
+  static Color nightTextColor = Colors.red;
+
+  Color textColor = dayTextColor;
+
+  // 7:30 ams
+  int alarmMorningHour = 7;
+  int alarmMorningMin = 30;
+
+  // 8:00 pm
+  int alarmNightHour = 20;
+  int alarmNightMin = 0;
+
   @override
   void initState() {
     super.initState();
@@ -54,6 +69,12 @@ class _DigitalClockState extends State<DigitalClock> {
     widget.model.addListener(_updateModel);
     _updateTime();
     _updateModel();
+  }
+
+  void Battery()
+  {
+    // Instantiate it
+    var battery = Battery();
   }
 
   @override
@@ -109,11 +130,13 @@ class _DigitalClockState extends State<DigitalClock> {
   @override
   Widget build(BuildContext context) {
 
+
+
     final colors = Theme.of(context).brightness == Brightness.light
         ? _lightTheme
         : _darkTheme;
 
-    Color textColor;
+
 
     // final hour =
     var hour =
@@ -125,15 +148,27 @@ class _DigitalClockState extends State<DigitalClock> {
       print("Testing: " + hour);
     }
 
-    if(_dateTime.hour > 7 && _dateTime.minute > 30)
+    // checkAlarmTimeAndSetColor();
+
+    Color textColor = dayTextColor;
+
+    // night alarm check
+    if(_dateTime.hour >= alarmNightHour)
     {
-      textColor = Colors.green;
+      textColor = nightTextColor;
     }
 
-    if(_dateTime.hour >= 20 || _dateTime.hour <= 7)
+    // morning alarm check
+    if(_dateTime.hour <= alarmMorningHour)
     {
-      textColor = Colors.red;
+      if(_dateTime.minute < alarmMorningMin)
+      {
+          textColor = nightTextColor;
+      }
+
     }
+
+
 
     final minute = DateFormat('mm').format(_dateTime);
     final fontSize = MediaQuery.of(context).size.width / 3.5;
@@ -152,6 +187,7 @@ class _DigitalClockState extends State<DigitalClock> {
     );
 
     return Container(
+      constraints: BoxConstraints.expand(),
       color: colors[_Element.background],
       child: Center(
         child: DefaultTextStyle(
@@ -166,4 +202,6 @@ class _DigitalClockState extends State<DigitalClock> {
       ),
     );
   }
+
+
 }
